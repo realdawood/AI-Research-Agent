@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Research Agent</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <section class="hero">
+
+            <div class="badge">AI Research Agent</div>
+
+            <h1>
+                Research any topic<br>
+                with AI
+            </h1>
+
+            <p>
+                Search the web, analyze reliable sources, and generate
+                a clear research report with AI-powered agents.
+            </p>
+
+        </section>
+
+
+        <section class="search-box">
+
+            <input
+                type="text"
+                id="topic"
+                placeholder="What would you like to research?"
+                autocomplete="off"
+            >
+
+            <button id="researchButton">
+                Research
+            </button>
+
+        </section>
+
+
+        <div id="loading" class="loading hidden">
+
+            <div class="spinner"></div>
+
+            <div>
+                <strong>Researching your topic...</strong>
+                <span>
+                    Searching sources, analyzing information, and preparing your report.
+                </span>
+            </div>
+
+        </div>
+
+
+        <div id="error" class="error hidden"></div>
+
+
+        <section id="results" class="results hidden">
+
+            <div class="card report-card">
+
+                <div class="card-header">
+                    <span class="section-label">RESULT</span>
+                    <h2>Research Report</h2>
+                </div>
+
+                <div id="report" class="content"></div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-header">
+                    <span class="section-label">QUALITY CHECK</span>
+                    <h2>Critic Review</h2>
+                </div>
+
+                <div id="feedback" class="content"></div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-header">
+                    <span class="section-label">RESEARCH</span>
+                    <h2>Sources</h2>
+                </div>
+
+                <div id="sources" class="content"></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="/static/script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,302 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  }
+
+body {
+font-family: Arial, Helvetica, sans-serif;
+background: #f6f8fc;
+color: #172033;
+line-height: 1.6;
+}
+
+.container {
+width: 90%;
+max-width: 1000px;
+margin: 0 auto;
+padding: 70px 0;
+}
+
+/* HERO */
+
+.hero {
+text-align: center;
+margin-bottom: 42px;
+}
+
+.badge {
+display: inline-block;
+padding: 7px 15px;
+border-radius: 20px;
+background: #e9efff;
+color: #3157b7;
+font-size: 13px;
+font-weight: 600;
+margin-bottom: 20px;
+}
+
+.hero h1 {
+font-size: 50px;
+line-height: 1.1;
+letter-spacing: -1.5px;
+margin-bottom: 20px;
+}
+
+.hero p {
+max-width: 650px;
+margin: auto;
+color: #687386;
+font-size: 17px;
+}
+
+/* SEARCH */
+
+.search-box {
+display: flex;
+gap: 12px;
+margin-bottom: 28px;
+}
+
+.search-box input {
+flex: 1;
+padding: 17px 18px;
+border: 1px solid #d8deea;
+border-radius: 12px;
+background: white;
+color: #172033;
+font-size: 16px;
+outline: none;
+transition: border 0.2s, box-shadow 0.2s;
+}
+
+.search-box input:focus {
+border-color: #3157b7;
+box-shadow: 0 0 0 3px rgba(49, 87, 183, 0.10);
+}
+
+.search-box button {
+padding: 17px 30px;
+border: none;
+border-radius: 12px;
+background: #3157b7;
+color: white;
+font-size: 16px;
+font-weight: 600;
+cursor: pointer;
+transition: transform 0.2s, opacity 0.2s;
+}
+
+.search-box button:hover {
+opacity: 0.92;
+transform: translateY(-1px);
+}
+
+.search-box button:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+transform: none;
+}
+
+/* LOADING */
+
+.loading {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 14px;
+padding: 22px;
+margin-bottom: 25px;
+background: white;
+border: 1px solid #e3e7ef;
+border-radius: 12px;
+color: #3157b7;
+}
+
+.loading span {
+display: block;
+color: #7a8495;
+font-size: 14px;
+margin-top: 2px;
+}
+
+.spinner {
+width: 22px;
+height: 22px;
+border: 3px solid #dce4f7;
+border-top-color: #3157b7;
+border-radius: 50%;
+animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+to {
+transform: rotate(360deg);
+}
+}
+
+/* RESULTS */
+
+.card {
+background: white;
+padding: 30px;
+margin-bottom: 20px;
+border: 1px solid #e3e7ef;
+border-radius: 15px;
+box-shadow: 0 5px 20px rgba(25, 40, 70, 0.05);
+}
+
+.card-header {
+margin-bottom: 22px;
+}
+
+.section-label {
+display: block;
+color: #3157b7;
+font-size: 11px;
+font-weight: 700;
+letter-spacing: 1px;
+margin-bottom: 5px;
+}
+
+.card h2 {
+font-size: 24px;
+color: #172033;
+}
+
+/* CONTENT */
+
+.content {
+color: #3d4655;
+font-size: 16px;
+white-space: pre-wrap;
+overflow-wrap: anywhere;
+}
+
+.report-card .content {
+line-height: 1.8;
+}
+
+#feedback {
+background: #f8f9fc;
+padding: 20px;
+border-radius: 10px;
+border-left: 4px solid #3157b7;
+}
+
+#sources {
+font-size: 14px;
+color: #5f6b7c;
+line-height: 1.7;
+}
+
+/* ERROR */
+
+.error {
+background: #fff1f1;
+color: #a12b2b;
+border: 1px solid #f3cccc;
+padding: 15px 18px;
+margin-bottom: 25px;
+border-radius: 10px;
+}
+
+/* UTILITY */
+
+.hidden {
+display: none;
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+    .container {
+        width: 92%;
+        padding: 45px 0;
+    }
+
+    .hero h1 {
+        font-size: 38px;
+    }
+
+    .hero p {
+        font-size: 16px;
+    }
+
+    .search-box {
+        flex-direction: column;
+    }
+
+    .search-box button {
+        width: 100%;
+    }
+
+    .card {
+        padding: 22px;
+    }
+
+    .card h2 {
+        font-size: 21px;
+    }
+
+    .loading {
+        align-items: flex-start;
+    }
+
+}
+
+#sources a {
+    color: #3157b7;
+    text-decoration: none;
+    word-break: break-all;
+}
+
+#sources a:hover {
+    text-decoration: underline;
+}
+
+.source-item {
+    display: flex;
+    gap: 15px;
+    padding: 16px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.source-item:last-child {
+    border-bottom: none;
+}
+
+.source-number {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eef2ff;
+    color: #3157b7;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.source-info {
+    min-width: 0;
+}
+
+.source-title {
+    color: #172033;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.source-info a {
+    color: #3157b7;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.source-info a:hover {
+    text-decoration: underline;
+}
