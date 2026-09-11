@@ -1,267 +1,380 @@
 # AI Research Agent
 
-An AI-powered research assistant that searches the web, reads relevant sources, generates a research report, and evaluates the report using a critic agent.
+An AI-powered research assistant that searches the web, analyzes information from multiple sources, generates a structured research report, and performs a quality check before presenting the final result.
 
-If the report receives a low score, the system performs additional targeted research, reads the new sources, rewrites the report, and evaluates it again.
+This project was built as a practical **Generative AI / Agentic AI application**, combining AI agents, external tools, web research, FastAPI, and a lightweight frontend into a complete working application.
+
+## Preview
+
+![AI Research Agent](assets/Researcher.PNG)
 
 ## Features
 
-* 🔎 Web search using Tavily
-* 🤖 AI-powered search and reader agents
-* 🌐 Web scraping for deeper source content
-* 📝 Automated research report generation
-* 🧐 AI critic for report evaluation
-* 🔄 Iterative research and improvement loop
-* 📚 Source collection and display
-* ⚡ FastAPI backend
-* 🎨 Responsive HTML/CSS/JavaScript frontend
-* 🛡️ Bounded retries to prevent infinite improvement loops
+- 🔎 **Web Research** — Searches the web for relevant information based on the user's research topic.
+- 📚 **Source Analysis** — Processes information gathered from multiple web sources.
+- ✍️ **AI Report Generation** — Generates a structured research report based on the gathered information.
+- 🧠 **Critic Review** — A separate quality-checking step reviews the generated research.
+- 🔄 **Additional Research** — Can perform additional research when the initial result needs improvement.
+- 📊 **Live Progress Updates** — Shows the current stage and progress percentage while the system is working.
+- 🔗 **Source References** — Displays the sources discovered during the research process.
+- 🌙 **Dark Mode** — Includes a light/dark theme toggle with saved user preference.
+- 📱 **Responsive Interface** — Designed to work across desktop and smaller screens.
+- ⚡ **FastAPI Backend** — Provides the API layer for the research application.
+- 🖥️ **Lightweight Frontend** — Built with HTML, CSS, and JavaScript without a heavy frontend framework.
+
 
 ## How It Works
 
-The system follows an iterative research workflow:
+The application follows a multi-stage research workflow:
 
 ```text
-User Topic
-    ↓
-Search Agent
-    ↓
-Reader Agent
-    ↓
-Report Writer
-    ↓
-Critic
-    ↓
-Score >= 7?
-   ├── Yes → Final Report
-   │
-   └── No → Additional Research
-                 ↓
-              Reader Agent
-                 ↓
-              Rewrite Report
-                 ↓
-                Critic
-                 ↺
-```
+                    User
+                     │
+                     ▼
+              Research Topic
+                     │
+                     ▼
+              ┌─────────────┐
+              │ Web Search  │
+              └──────┬──────┘
+                     │
+                     ▼
+            ┌─────────────────┐
+            │ Source Analysis │
+            └────────┬────────┘
+                     │
+                     ▼
+            ┌─────────────────┐
+            │ Report Writer   │
+            └────────┬────────┘
+                     │
+                     ▼
+            ┌─────────────────┐
+            │  Critic Review  │
+            └────────┬────────┘
+                     │
+              ┌──────┴──────┐
+              │             │
+           Needs Work?     Good
+              │             │
+              ▼             ▼
+       Additional         Final
+        Research          Report
+              │             │
+              └──────┬──────┘
+                     │
+                     ▼
+              Results + Sources
 
-The system allows a maximum of two improvement cycles after the initial report.
+The frontend receives progress information while the research workflow is running, allowing the user to see which stage is currently being processed.
 
-## Project Structure
+Application Flow
+1. Enter a Topic
 
-```text
-AI-Research-Agent/
+The user enters a topic they want to research.
+
+Example:
+
+How is Generative AI changing software development?
+2. Search the Web
+
+The research workflow searches for relevant information using an external web search tool.
+
+![AI Research Agent](assets/Researcher1.PNG)
+
+3. Analyze Sources
+
+The system processes and analyzes information collected from the search results.
+
+4. Generate the Report
+
+The writer component uses the collected information to create a structured research report.
+
+![AI Research Agent](assets/Researcher2.PNG)
+
+5. Critic Review
+
+The generated report is reviewed by the critic component.
+
+If the result needs improvement, the workflow can perform additional research before producing the final result.
+
+![AI Research Agent](assets/Researcher3.PNG)
+
+6. Present Results
+
+The application displays:
+
+
+
+Research report
+
+![AI Research Agent](assets/Researcher4.PNG)
+
+Critic feedback
+
+![AI Research Agent](assets/Researcher5.PNG)
+
+Sources
+Research progress
+Technology Stack
+Backend
+Python
+FastAPI
+Uvicorn
+Generative AI
+LangChain
+AI Agents
+Tool Calling
+LLM APIs
+Research
+Tavily Web Search
+Frontend
+HTML5
+CSS3
+JavaScript
+Server-Sent Events (SSE)
+Development
+VS Code
+Python Virtual Environment
+Git / GitHub
+Project Structure
+AI Research Agent/
+│
+├── main.py
+├── pipeline.py
+├── agents.py
+├── tools.py
 │
 ├── frontend/
 │   ├── index.html
-│   ├── style.css
-│   └── script.js
+│   ├── script.js
+│   └── style.css
 │
-├── agents.py
-├── pipeline.py
-├── tools.py
-├── main.py
+├── assets/
+│   └── Researcher.PNG
 │
-├── .env.example
-├── .gitignore
 ├── requirements.txt
-├── README.md
-└── LICENSE
-```
+├── .env
+├── .gitignore
+└── README.md
+Main Components
+main.py
 
-## Technologies Used
+Handles the FastAPI application and API endpoints.
 
-* Python
-* LangChain
-* LangChain Agents
-* OpenRouter
-* Tavily Search
-* FastAPI
-* HTML
-* CSS
-* JavaScript
-* BeautifulSoup
-* Requests
-* Pydantic
+pipeline.py
 
-## Agent Architecture
+Contains the main research workflow and coordinates the different stages of the research process.
 
-### Search Agent
+agents.py
 
-The Search Agent uses the web search tool to find recent and reliable information related to the user's topic.
+Contains the AI agents and chains responsible for tasks such as searching, analyzing, writing, and critic review.
 
-### Reader Agent
+tools.py
 
-The Reader Agent selects a relevant URL from the search results and uses the web scraping tool to retrieve deeper content from the source.
+Contains external tools used by the AI workflow, including web search functionality.
 
-### Report Writer
+frontend/
 
-The Writer LLM combines the search results and scraped content to generate a structured research report.
+Contains the user interface:
 
-### Critic
-
-The Critic evaluates the generated report and provides:
-
-* Score
-* Strengths
-* Areas to improve
-* Overall verdict
-
-### Iterative Improvement
-
-If the critic gives the report a score below 7/10, the system performs targeted additional research based on the critic's feedback.
-
-The new information is then read, added to the existing research, and used to rewrite the report.
-
-This process can repeat for a maximum of two improvement cycles.
-
-## API Endpoints
-
-### Health Check
-
-```http
+index.html — Application structure
+style.css — Interface styling and dark mode
+script.js — Research requests, progress updates, results, and theme switching
+API
+Health Check
 GET /health
-```
 
-Returns:
+Example response:
 
-```json
 {
   "status": "healthy"
 }
-```
-
-### Research
-
-```http
+Research
 POST /api/research
-```
 
 Request:
 
-```json
 {
-  "topic": "Artificial Intelligence in Healthcare"
+  "topic": "Impact of artificial intelligence on software development"
 }
-```
 
-The endpoint returns the generated report, critic feedback, and collected sources.
+The endpoint processes the research topic through the AI research workflow and returns the generated report, critic feedback, and sources.
 
-## Installation
-
-### 1. Clone the repository
-
-```bash
+Running Locally
+1. Clone the Repository
 git clone https://github.com/realdawood/AI-Research-Agent.git
 cd AI-Research-Agent
-```
 
-### 2. Create a virtual environment
+If your GitHub repository has a different name, replace the repository URL and folder name accordingly.
 
-```bash
+2. Create a Virtual Environment
+
+On Windows:
+
 python -m venv .venv
-```
 
-Activate it on Windows:
+Activate using Command Prompt:
 
-```bash
 .venv\Scripts\activate
-```
 
-### 3. Install dependencies
+Or Git Bash:
 
-```bash
+source .venv/Scripts/activate
+3. Install Dependencies
 pip install -r requirements.txt
-```
+4. Configure Environment Variables
 
-### 4. Configure environment variables
+Create a .env file in the project root.
 
-Create a `.env` file based on `.env.example`.
+Add the API credentials required by the project, for example:
 
-```env
 TAVILY_API_KEY=your_tavily_api_key
-OPENROUTER_API_KEY=your_openrouter_api_key
-```
 
-Never commit your `.env` file to GitHub.
+Add the required LLM provider credentials according to the model configuration in agents.py.
 
-### 5. Run the application
+Never commit your .env file or API keys to GitHub.
 
-```bash
+5. Start the Application
 uvicorn main:app --reload
-```
 
-Open the application in your browser:
+The application will be available at:
 
-```text
 http://127.0.0.1:8000
-```
 
-## Example Workflow
+Open the address in your browser.
 
-For a topic such as:
+Example
 
-```text
-Impact of Generative AI on Software Development
-```
+Enter a research topic such as:
 
-the system:
+The future of Generative AI in software development
 
-1. Searches the web for recent information.
-2. Identifies relevant sources.
-3. Scrapes a source for deeper content.
-4. Generates a research report.
-5. Sends the report to the critic.
-6. Evaluates the report.
-7. If the score is below 7/10, performs additional targeted research.
-8. Reads the additional source.
-9. Rewrites the report.
-10. Runs the critic again.
-11. Returns the final report and sources.
+The application will process the topic through the research workflow and display the results.
 
-## Environment Variables
+The interface provides live feedback while the research is being performed.
 
-Create a `.env` file containing:
+What I Built
 
-```env
-TAVILY_API_KEY=
-OPENROUTER_API_KEY=
-```
+This project was created to practice building a more complete Agentic AI application rather than limiting the implementation to a simple chatbot or single LLM call.
 
-You can use `.env.example` as a template.
+The main idea was to divide the research task into multiple stages, allowing different AI components to handle different responsibilities.
 
-## Limitations
+The application combines:
 
-This project is designed as a learning and portfolio project.
+AI Agents
+     +
+Tool Calling
+     +
+Web Search
+     +
+Source Analysis
+     +
+Report Generation
+     +
+Critic Review
+     +
+FastAPI
+     +
+Frontend UI
 
-Web scraping may not work correctly with every website because some websites use:
+This helped me understand how individual Generative AI concepts can be connected into a practical application.
 
-* JavaScript-rendered content
-* Bot protection
-* Authentication
-* Paywalls
-* Rate limiting
-* Restricted access
+Key Learning Outcomes
 
-The quality of the generated report also depends on the quality and availability of the retrieved sources.
+While building this project, I practiced:
 
-## Future Improvements
+Building AI agent workflows
+Working with tool calling
+Integrating external APIs
+Web search integration
+Processing research information
+Multi-step AI pipelines
+Prompt design
+LLM-based report generation
+AI-based quality checking
+FastAPI application development
+Connecting frontend and backend
+Streaming progress updates
+Server-Sent Events
+JavaScript API handling
+Frontend state management
+Error handling
+Responsive UI development
+Dark mode implementation
+Challenges Solved
+Connecting AI Agents With Tools
 
-Possible future improvements include:
+Understanding how an AI model can interact with external tools was an important part of building the research workflow.
 
-* More reliable structured source handling
-* Better source selection
-* Improved research-stage progress indicators
-* More robust error handling
-* Automated testing
-* Logging and monitoring
-* More advanced evaluation methods
-* Production deployment
+Multi-Step Research Workflow
 
-## Project Purpose
+Instead of relying on one LLM call, the application separates research into multiple stages.
 
-This project was built to practice and demonstrate practical Generative AI and Agentic AI concepts, including tool calling, web research, web scraping, multi-step agent workflows, report generation, evaluation, and iterative improvement.
+Backend and Frontend Communication
 
-## License
+The project connects a Python/FastAPI backend with a browser-based JavaScript frontend.
 
-This project is licensed under the MIT License. See the `LICENSE` file for details.
+Live Research Progress
+
+The application provides progress updates while the backend research workflow is running instead of showing only a generic loading indicator.
+
+Frontend Debugging
+
+The project involved debugging JavaScript, API communication, static file serving, browser caching, and UI state issues.
+
+Current Status
+
+🟢 Working
+
+The current version includes:
+
+Web research
+AI-powered source analysis
+Research report generation
+Critic review
+Additional research workflow
+Live progress display
+Source presentation
+FastAPI backend
+Browser-based frontend
+Dark mode
+Responsive layout
+Future Improvements
+ Deploy the application publicly
+ Add downloadable research reports
+ Improve report formatting
+ Add citation management
+ Add research history
+ Improve source ranking
+ Add more research tools
+ Add stronger evaluation metrics
+ Improve agent observability
+ Add authentication
+ Improve overall UI/UX
+Project Purpose
+
+The goal of this project is not just to demonstrate an LLM response, but to explore how Generative AI and AI agents can be combined with external tools and backend services to build a practical application.
+
+It represents part of my ongoing learning journey toward building production-oriented AI and ML applications.
+
+Author
+Muhammad Dawood Bin Naeem
+
+BBIT — 5th Semester
+
+Interested in:
+
+Artificial Intelligence
+Machine Learning
+Generative AI
+AI Agents
+RAG Systems
+AI Engineering
+Profiles
+
+GitHub:
+https://github.com/realdawood
+
+LinkedIn:
+https://linkedin.com/in/realdawood
