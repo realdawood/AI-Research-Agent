@@ -1,12 +1,31 @@
 import re
+
 from agents import search_agent, reader_agent, writer_chain, critic_chain
 
 
-def research_pipeline(topic: str) -> dict:
+def research_pipeline(topic: str, progress_callback=None) -> dict:
+
+    def progress(stage, message, percent, data=None):
+        if progress_callback:
+            progress_callback({
+                "stage": stage,
+                "message": message,
+                "percent": percent,
+                "data": data or {}
+            })
 
     state = {}
 
+    # --------------------------------
     # 1. Search
+    # --------------------------------
+
+    progress(
+        "search",
+        "Searching the web for reliable information...",
+        10
+    )
+
     search = search_agent()
 
     search_result = search.invoke(
@@ -22,12 +41,35 @@ def research_pipeline(topic: str) -> dict:
 
     state["search_results"] = search_result["messages"][-1].content
 
-    state["sources"] = re.findall(
-    r'https?://[^\s\]\[<>"\']+',
-    state["search_results"]
-)
+    if isinstance(state["search_results"], list):
+        state["search_results"] = "\n".join(
+            str(item) for item in state["search_results"]
+        )
 
+    state["sources"] = re.findall(
+        r'https?://[^\s\]\[<>"\']+',
+        state["search_results"]
+    )
+
+    progress(
+        "search",
+        f"Web search completed — found {len(state['sources'])} sources.",
+        25,
+        {
+            "sources": state["sources"]
+        }
+    )
+
+    # --------------------------------
     # 2. Read / Scrape
+    # --------------------------------
+
+    progress(
+        "reader",
+        "Reading and analyzing the most relevant source...",
+        30
+    )
+
     reader = reader_agent()
 
     reader_result = reader.invoke(
@@ -48,7 +90,22 @@ def research_pipeline(topic: str) -> dict:
 
     state["scrape_results"] = reader_result["messages"][-1].content
 
+    progress(
+        "reader",
+        "Source analysis completed.",
+        50
+    )
+
+    # --------------------------------
     # 3. Write report
+    # --------------------------------
+
+    progress(
+        "writer",
+        "Generating the research report...",
+        55
+    )
+
     combined_research = (
         f"SEARCH RESULT:\n{state['search_results']}\n\n"
         f"SCRAPED RESULT:\n{state['scrape_results']}"
@@ -61,10 +118,25 @@ def research_pipeline(topic: str) -> dict:
         }
     )
 
+    progress(
+        "writer",
+        "Research report generated.",
+        75
+    )
+
+    # --------------------------------
     # 4. Critic + feedback loop
+    # --------------------------------
+
     max_retries = 2
 
     for attempt in range(max_retries + 1):
+
+        progress(
+            "critic",
+            f"Quality check in progress (review {attempt + 1})...",
+            80
+        )
 
         state["feedback"] = critic_chain.invoke(
             {
@@ -73,11 +145,20 @@ def research_pipeline(topic: str) -> dict:
         )
 
         score_match = re.search(
-    r"Score:\s*(\d+(?:\.\d+)?)\s*/\s*10",
-    state["feedback"]
-)
+            r"Score:\s*(\d+(?:\.\d+)?)\s*/\s*10",
+            state["feedback"]
+        )
 
         score = float(score_match.group(1)) if score_match else 0
+
+        progress(
+            "critic",
+            f"Quality review completed — score: {score}/10",
+            88,
+            {
+                "score": score
+            }
+        )
 
         if score >= 7:
             break
@@ -85,7 +166,16 @@ def research_pipeline(topic: str) -> dict:
         if attempt == max_retries:
             break
 
+        # --------------------------------
         # Additional research
+        # --------------------------------
+
+        progress(
+            "additional_search",
+            "The report needs improvement. Gathering additional research...",
+            60
+        )
+
         search = search_agent()
 
         additional_research = search.invoke(
@@ -107,17 +197,50 @@ def research_pipeline(topic: str) -> dict:
 
         additional_results = additional_research["messages"][-1].content
 
+        if isinstance(additional_results, list):
+            additional_results = "\n".join(
+                str(item) for item in additional_results
+            )
+
         combined_research += (
             f"\n\nADDITIONAL RESEARCH:\n{additional_results}"
         )
 
+        progress(
+            "rewrite",
+            "Revising the report using the additional research...",
+            70
+        )
+
+        # --------------------------------
         # Rewrite
+        # --------------------------------
+
         state["report"] = writer_chain.invoke(
             {
                 "topic": topic,
                 "research": combined_research
             }
         )
+
+        progress(
+            "rewrite",
+            "Report revised. Running another quality check...",
+            78
+        )
+
+    # --------------------------------
+    # Complete
+    # --------------------------------
+
+    progress(
+        "complete",
+        "Research completed successfully.",
+        100,
+        {
+            "score": score
+        }
+    )
 
     return {
         "search_results": state["search_results"],

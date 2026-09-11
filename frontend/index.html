@@ -12,6 +12,10 @@
 
 <body>
 
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+    🌙
+        </button>
+
     <main class="container">
 
         <section class="hero">
@@ -47,16 +51,62 @@
         </section>
 
 
-        <div id="loading" class="loading hidden">
+            <div id="loading" class="loading hidden">
 
-            <div class="spinner"></div>
+                <div class="progress-header">
 
-            <div>
-                <strong>Researching your topic...</strong>
-                <span>
-                    Searching sources, analyzing information, and preparing your report.
-                </span>
-            </div>
+                    <div>
+                        <strong id="progressTitle">
+                            Researching your topic...
+                        </strong>
+
+                        <span id="progressMessage">
+                            Preparing research...
+                        </span>
+                    </div>
+
+                    <strong id="progressPercent">0%</strong>
+
+                </div>
+
+
+                <div class="progress-bar">
+
+                    <div
+                        id="progressFill"
+                        class="progress-fill"
+                        style="width: 0%"
+                    ></div>
+
+                </div>
+
+
+                <div id="progressSteps" class="progress-steps">
+
+                    <div class="progress-step" data-stage="search">
+                        <span class="step-icon">○</span>
+                        <span>Search the web</span>
+                    </div>
+
+                    <div class="progress-step" data-stage="reader">
+                        <span class="step-icon">○</span>
+                        <span>Analyze sources</span>
+                    </div>
+
+                    <div class="progress-step" data-stage="writer">
+                        <span class="step-icon">○</span>
+                        <span>Generate report</span>
+                    </div>
+
+                    <div class="progress-step" data-stage="critic">
+                        <span class="step-icon">○</span>
+                        <span>Quality check</span>
+                    </div>
+
+                </div>
+
+
+                <div id="liveResearchData" class="live-research-data"></div>
 
         </div>
 

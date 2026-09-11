@@ -1,37 +1,47 @@
-import os
 from langchain.agents import create_agent
-from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from dotenv import load_dotenv
+from langchain_ollama import ChatOllama
+
 from tools import web_scrap, web_search
 
-load_dotenv()
 
-llm = ChatOpenAI(
-    model="openrouter/free",
-    api_key=os.getenv("OPENROUTER_API_KEY"),
-    base_url="https://openrouter.ai/api/v1",
+# --------------------------------
+# Local LLM
+# --------------------------------
+
+llm = ChatOllama(
+    model="qwen3:1.7b",
     temperature=0
 )
 
-parser = StrOutputParser()
+
+# --------------------------------
+# Agents
+# --------------------------------
 
 def search_agent():
     return create_agent(
-        model = llm,
-        tools= [web_search]
+        model=llm,
+        tools=[web_search]
     )
+
 
 def reader_agent():
     return create_agent(
-        model = llm,
-        tools= [web_scrap]
+        model=llm,
+        tools=[web_scrap]
     )
 
+
+# --------------------------------
+# Writer
+# --------------------------------
+
 writer = ChatPromptTemplate.from_messages([
-    ("system",
-"""You are a professional research analyst.
+    (
+        "system",
+        """You are a professional research analyst.
 
 Write clear, natural and easy-to-read research reports.
 
@@ -56,9 +66,12 @@ Key Findings
 Conclusion
 Sources
 
-Keep the writing factual, concise and professional."""),
+Keep the writing factual, concise and professional."""
+    ),
 
-    ("human", """Research the following topic using the information provided.
+    (
+        "human",
+        """Research the following topic using the information provided.
 
 Topic: {topic}
 
@@ -83,18 +96,31 @@ Give a concise overall assessment.
 # Sources
 
 List the URLs used in the research.
-""")
+"""
+    )
 ])
 
-writer_chain = writer | llm | parser
+writer_chain = writer | llm | StrOutputParser()
+
+
+# --------------------------------
+# Critic
+# --------------------------------
 
 critic = ChatPromptTemplate.from_messages([
-    ("system", "You are a sharp and constructive research critic. Be Sharp and honest"),
-    ("human", """Review the search report below and evaluate it strictly
-     
-      Report : {report}
-       
-    Respond in exactly this format:
+    (
+        "system",
+        "You are a sharp and constructive research critic. Be sharp and honest."
+    ),
+
+    (
+        "human",
+        """Review the search report below and evaluate it strictly.
+
+Report:
+{report}
+
+Respond in exactly this format:
 
 Score: X/10
 
@@ -113,7 +139,8 @@ Do not use Markdown.
 Do not use asterisks.
 Do not use hashtags.
 Do not use bullet symbols.
-Do not use code fences.""")
+Do not use code fences."""
+    )
 ])
 
-critic_chain = critic | llm | parser
+critic_chain = critic | llm | StrOutputParser()

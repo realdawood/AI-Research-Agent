@@ -24,5 +24,4 @@ ipykernel
 beautifulsoup4
 langchain-tavily
 rich
-langchain-cerebras
-cerebras
+langchain-ollama
